@@ -1,0 +1,7 @@
+#!/usr/bin/python
+
+from npuzzle import main 
+
+# Run npuzzle
+if __name__ == '__main__':
+  main()
