@@ -19,3 +19,17 @@ def manhattan(current, goal):
 			if (abs(goal.index(i) % 3 - current.index(i) % 3) == 2 and pos_difference % 3 == 1):
 				distance += 2
 	return distance
+
+if (__name__ == '__main__'):
+	current = [
+		7, 3, 0,
+		5, 2, 8,
+		6, 1, 4
+	]
+	goal = [
+		1, 2, 3,
+		4, 5, 6,
+		7, 8, 0
+	]
+
+	print manhattan(current, goal)
