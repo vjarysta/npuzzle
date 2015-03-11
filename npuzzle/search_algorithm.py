@@ -1,12 +1,13 @@
-from manhattan import manhattan
+import heuristic_functions
 
 class IDA_star:
 
-  def __init__(self, initial, goal, size):
+  def __init__(self, initial, goal, size, heuristic):
     self.initial = initial
     self.goal = goal
     self.size = size
     self.solution = []
+    self.h = heuristic_functions.get(heuristic)
 
   def get_next_states(self, state, size):
     def get_moves():
@@ -32,7 +33,7 @@ class IDA_star:
 
     def prioritize_states(states):
       def by_heuristic(state):
-        return manhattan(state, self.goal)
+        return self.h(state, self.goal)
       return sorted(states, key=by_heuristic)
 
     i = state.index(0)
@@ -41,7 +42,7 @@ class IDA_star:
     return prioritize_states(states)
 
   def search(self, state, g, threshold):
-    h = manhattan(state, self.goal)
+    h = self.h(state, self.goal)
     if h == 0:
       return h
     f = g + h
@@ -49,7 +50,7 @@ class IDA_star:
       return f
     next_threshold = 0
     for next_state in self.get_next_states(state, self.size):
-      h = manhattan(state, next_state)
+      h = self.h(state, next_state)
       res = self.search(next_state, g + h, threshold)
       if res == 0:
         self.solution.insert(0, state)
@@ -59,7 +60,7 @@ class IDA_star:
     return next_threshold
 
   def solve(self):
-    threshold = manhattan(self.initial, self.goal)
+    threshold = self.h(self.initial, self.goal)
     while 1:
       print threshold
       res = self.search(self.initial, 0, threshold)

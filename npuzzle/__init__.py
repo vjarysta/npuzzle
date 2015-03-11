@@ -9,7 +9,7 @@ def main():
   else:
     initial_state = get_puzzle.from_generator(args.size)
   goal_state = get_puzzle.goal(args.size)
-  solver = search_algorithm.IDA_star(initial_state, goal_state, args.size)
+  solver = search_algorithm.IDA_star(initial_state, goal_state, args.size, args.heuristic)
   solution = solver.solve()
 
 # TEMPORARY SOLUTION PRINTING
