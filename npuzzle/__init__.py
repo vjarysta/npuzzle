@@ -12,8 +12,9 @@ def main():
   solver = search_algorithm.IDA_star(initial_state, goal_state, args.size, args.heuristic)
   solution = solver.solve()
 
+  print "FOUND !\nNumber of move:", len(solution) - 1
 # TEMPORARY SOLUTION PRINTING
-  for state in solution:
-    print "======"
-    for i in range(args.size):
-      print state[i * args.size:(i + 1) * args.size]
+  # for state in solution:
+  #   print "======"
+  #   for i in range(args.size):
+  #     print state[i * args.size:(i + 1) * args.size]

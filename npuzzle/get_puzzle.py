@@ -9,7 +9,7 @@ def goal(size):
 def from_generator(size):
   puzzle = goal(size)
 
-  for i in range(100):
+  for i in range(1000):
     i = puzzle.index(0)
     x = i % size
     y = i / size
