@@ -22,9 +22,9 @@ def manhattan(current, goal):
 
 if (__name__ == '__main__'):
 	current = [
-		7, 3, 0,
-		5, 2, 8,
-		6, 1, 4
+		1, 2, 3,
+		4, 5, 6,
+		7, 8, 0
 	]
 	goal = [
 		1, 2, 3,
