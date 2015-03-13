@@ -9,6 +9,8 @@ class IDA_star:
     self.size = size
     self.solution = []
     self.h = heuristic_functions.get(heuristic)
+    self.total_set = 0
+    self.max_set = 0
 
   def get_next_states(self, current_state, size):
     def get_moves():
@@ -49,6 +51,8 @@ class IDA_star:
     return prioritize_states(states)
 
   def search(self, state, g, threshold):
+    self.max_set += 1
+    self.total_set += 1
     h = self.h(state, self.goal)
     if h == 0:
       return h
@@ -70,11 +74,11 @@ class IDA_star:
   def solve(self):
     threshold = self.h(self.initial, self.goal)
     while 1:
-      print "Threshold :", threshold
+      self.max_set = 0
       res = self.search(self.initial, 0, threshold)
       if res == 0:
         self.solution.append(self.goal)
         break
       else:
         threshold = res
-    return self.solution
+    return self
