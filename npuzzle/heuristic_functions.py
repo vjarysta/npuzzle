@@ -10,6 +10,7 @@ def manhattan_distance(current, goal, s):
       res_x = abs(g_i % s.size - c_i % s.size)
       res_y = abs(g_i / s.size - c_i / s.size)
       distance += res_x + res_y
+
   return distance
 
 def xy(current, goal, s):
@@ -53,35 +54,16 @@ def linear_conflict(current, goal, s):
           distance += 2
   return distance
 
-patterns =  { 4:  [
-                    [1, 2, 3, 4, 5, -1, -1, -1, 9, -1, -1, -1, 13, -1, -1, -1], 
-                    [1, 2, 3, 4, 5, 6, 7, 8, 9, -1, -1, -1, 13, 14, -1, -1],
-                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, -1]
-                  ],
-              3:  [
-                    [1, 2, 3, 4, -1, -1, 7, -1, -1],
-                    [1, 2, 3, 4, 5, 6, 7, 8, -1]
-                  ]
-            }
-
 def pattern_database(current, goal, s):
-  if current == goal:
-    return 0
-
   distance = 0
-  pattern = patterns[s.size][0]
- 
-  for i in pattern:
-    if i != -1:
-      g_i = pattern.index(i)
+  
+  for i in goal:
+    if i is not -1:
+      g_i = goal.index(i)
       c_i = current.index(i)
       res_x = abs(g_i % s.size - c_i % s.size)
       res_y = abs(g_i / s.size - c_i / s.size)
       distance += res_x + res_y
-
-  if distance == 0:
-    del patterns[s.size][0]
-    # s.p_db += 1
 
   return distance
 

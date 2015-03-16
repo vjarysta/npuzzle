@@ -2,16 +2,17 @@ import heuristic_functions
 
 class IDA_star:
 
-  def __init__(self, initial, goal, size, heuristic):
+  def __init__(self, initial, goal, size, heuristic, p_db):
     self.initial = initial
     self.previous = initial
+    self.current = initial
     self.goal = goal
     self.size = size
     self.solution = []
     self.h = heuristic_functions.get(heuristic)
     self.total_set = 0
     self.max_set = 0
-    self.p_db = 0
+    self.p_db = p_db
 
   def get_next_states(self, current_state, size):
     def get_moves():
@@ -33,10 +34,9 @@ class IDA_star:
       for move in moves:
         states.append(current_state[:])
         states[-1][move], states[-1][i] = states[-1][i], states[-1][move]
+        if states[-1] == self.previous:
+          del states[-1]
       return states
-
-    def filter_states(states):
-      return [state for state in states if self.previous != state]
 
     def prioritize_states(states):
       def by_heuristic(state):
@@ -47,13 +47,20 @@ class IDA_star:
     i = current_state.index(0)
     moves = get_moves()
     states = get_states(moves)
-    states = filter_states(states)
     return prioritize_states(states)
+
+  def is_goal(self, state):
+    for i in range(self.size * self.size):
+      if self.goal[i] != -1:
+        if self.goal[i] != state[i]:
+          return False
+    return True 
 
   def search(self, state, g, threshold):
     self.max_set += 1
     self.total_set += 1
-    if state == self.goal:
+    self.current = state
+    if self.is_goal(state):
       return 0
     h = self.h(state, self.goal, self)
     f = g + h
@@ -77,7 +84,7 @@ class IDA_star:
       self.max_set = 0
       res = self.search(self.initial, 0, threshold)
       if res == 0:
-        self.solution.append(self.goal)
+        self.solution.append(self.current)
         break
       else:
         threshold = res
