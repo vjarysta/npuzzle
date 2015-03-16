@@ -17,6 +17,6 @@ def get_args():
 
   parser = argparse.ArgumentParser(description='A Python N-puzzle solver using IDA* algorithm coupled with an optional set of heuristic functions.')
   parser.add_argument('--size', type=lambda x: is_valid_size(parser, x), default=3, help="set size of the puzzle (min. 2). Default is 3. --file overrides this option.")
-  parser.add_argument('--heuristic', type=str, default='manhattan_distance', choices=['manhattan_distance', 'xy', 'misplaced_tiles', 'linear_conflict'], help="set the heuristic function used by IDA*. Default to manhattan_distance.")
+  parser.add_argument('--heuristic', type=str, default='manhattan_distance', choices=['manhattan_distance', 'xy', 'misplaced_tiles', 'linear_conflict', 'pattern_database'], help="set the heuristic function used by IDA*. Default to manhattan_distance.")
   parser.add_argument('--file', type=lambda x: is_valid_file(parser, x), help="use a file as puzzle. Overrides the --size option.")
   return parser.parse_args()

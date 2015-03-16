@@ -9,7 +9,7 @@ def goal(size):
 def from_generator(size):
   puzzle = goal(size)
 
-  for i in range(10000):
+  for i in range(100):
     i = puzzle.index(0)
     x = i % size
     y = i / size
@@ -24,6 +24,8 @@ def from_generator(size):
       moves.append((x) + ((y - 1) * size))
     to_swap = random.choice(moves)
     puzzle[to_swap], puzzle[i] = puzzle[i], puzzle[to_swap]
+
+  print puzzle
 
   return puzzle
 

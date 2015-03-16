@@ -11,6 +11,7 @@ class IDA_star:
     self.h = heuristic_functions.get(heuristic)
     self.total_set = 0
     self.max_set = 0
+    self.p_db = 0
 
   def get_next_states(self, current_state, size):
     def get_moves():
@@ -21,9 +22,9 @@ class IDA_star:
         moves.append((x + 1) + ((y) * size))
       if (y + 1 < size):
         moves.append((x) + ((y + 1) * size))
-      if (x > 0):
+      if (x > (0 + self.p_db)):
         moves.append((x - 1) + ((y) * size))
-      if (y > 0):
+      if (y > (0 + self.p_db)):
         moves.append((x) + ((y - 1) * size))
       return moves
 
@@ -35,12 +36,11 @@ class IDA_star:
       return states
 
     def filter_states(states):
-      res = [state for state in states if self.previous != state]
-      return res
+      return [state for state in states if self.previous != state]
 
     def prioritize_states(states):
       def by_heuristic(state):
-        return self.h(state, self.goal)
+        return self.h(state, self.goal, self)
 
       return sorted(states, key=by_heuristic)
 
@@ -53,26 +53,26 @@ class IDA_star:
   def search(self, state, g, threshold):
     self.max_set += 1
     self.total_set += 1
-    h = self.h(state, self.goal)
-    if h == 0:
-      return h
+    if state == self.goal:
+      return 0
+    h = self.h(state, self.goal, self)
     f = g + h
     if f > threshold:
       return f
     next_threshold = -1
-    for next_state in self.get_next_states(state, self.size):
+    next_states = self.get_next_states(state, self.size)
+    for next_state in next_states:
       self.previous = state
-      h = self.h(state, next_state)
-      res = self.search(next_state, g + h, threshold)
+      res = self.search(next_state, g + 1, threshold)
       if res == 0:
         self.solution.insert(0, state)
-        return res
+        return 0
       elif next_threshold == -1 or res < next_threshold:
         next_threshold = res
     return next_threshold
 
   def solve(self):
-    threshold = self.h(self.initial, self.goal)
+    threshold = self.h(self.initial, self.goal, self)
     while 1:
       self.max_set = 0
       res = self.search(self.initial, 0, threshold)
