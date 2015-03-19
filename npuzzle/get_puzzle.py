@@ -1,15 +1,43 @@
 import re
 import random
 
+def patterns(goal, size):
+  i = 0
+  patterns = []
+  while i < size:
+    patterns.append(goal[i * size : size + size * i])
+    i += 1
+  return patterns
+
 def goal(size):
-  goal = range(1, size * size)
-  goal.append(0)
-  return goal
+  total_size = size * size
+  puzzle = [-1 for i in range(total_size)]
+  current = 1
+  x = 0
+  i_x = 1
+  y = 0
+  i_y = 0
+  while 42:
+    puzzle[x + y * size] = current
+    if current == 0:
+      break
+    current += 1
+    if x + i_x == size or x + i_x < 0 or (i_x != 0 and puzzle[x + i_x + y * size] != -1):
+      i_y = i_x
+      i_x = 0
+    elif y + i_y == size or y + i_y < 0 or (i_y != 0 and puzzle[x + (y + i_y) * size] != -1):
+      i_x = -i_y
+      i_y = 0
+    x += i_x
+    y += i_y
+    if current == size * size:
+      current = 0
+  return puzzle
 
 def from_generator(size):
   puzzle = goal(size)
 
-  for i in range(300):
+  for i in range(100):
     i = puzzle.index(0)
     x = i % size
     y = i / size

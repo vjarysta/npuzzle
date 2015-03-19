@@ -15,6 +15,7 @@ def solvable(puzzle, size):
     blank_row = puzzle.index(0) / size + 1
 
   if (inversions + blank_row) % 2 == 0:
+    print "inversions:", inversions
     return True
   else:
     return False
@@ -31,17 +32,6 @@ def display_results(results):
         print solution
       prev = solution
 
-patterns =  { 4:  [
-                    [1, 2, 3, 4, 5, -1, -1, -1, 9, -1, -1, -1, 13, -1, -1, -1], 
-                    [-1, -1, -1, -1, -1, 6, 7, 8, -1, 10, -1, -1, -1, 14, -1, -1],
-                    [-1, -1, -1, -1, -1, -1, -1, -1,-1, -1, 11, 12, -1, -1, 15, -1]
-                  ],
-              3:  [
-                    [1, 2, 3, 4, -1, -1, 7, -1, -1],
-                    [-1, -1, -1, -1, 5, 6, -1, 8, -1]
-                  ]
-            }
-
 def main():
   args = get_args.get_args()
 
@@ -57,15 +47,15 @@ def main():
   res = []
   p_db = 0
   if args.heuristic == "pattern_database":
-    for pattern in patterns[args.size]:
+    for pattern in get_puzzle.patterns(get_puzzle.goal(args.size), args.size):
         if len(res):
           initial_state = res[-1].current
-        solver = search_algorithm.IDA_star(initial_state, pattern, args.size, args.heuristic, p_db)
+        solver = search_algorithm.A_star(initial_state, pattern, args.size, args.heuristic, p_db)
         res.append(solver.solve())
         p_db += 1
   else:
     goal_state = get_puzzle.goal(args.size)
-    solver = search_algorithm.IDA_star(initial_state, goal_state, args.size, args.heuristic, p_db)
+    solver = search_algorithm.A_star(initial_state, goal_state, args.size, args.heuristic, p_db)
     res.append(solver.solve())
-  
+
   display_results(res)

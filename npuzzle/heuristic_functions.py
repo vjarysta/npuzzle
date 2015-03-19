@@ -56,7 +56,7 @@ def linear_conflict(current, goal, s):
 
 def pattern_database(current, goal, s):
   distance = 0
-  
+
   for i in goal:
     if i is not -1:
       g_i = goal.index(i)

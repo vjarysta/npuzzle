@@ -1,6 +1,20 @@
 import heuristic_functions
+import heapq
 
-class IDA_star:
+class PriorityQueue:
+    def __init__(self):
+        self.elements = []
+    
+    def empty(self):
+        return len(self.elements) == 0
+    
+    def put(self, item, priority):
+        heapq.heappush(self.elements, (priority, item))
+
+    def get(self):
+        return heapq.heappop(self.elements)[1]
+
+class search_algorithm:
 
   def __init__(self, initial, goal, size, heuristic, p_db):
     self.initial = initial
@@ -13,6 +27,12 @@ class IDA_star:
     self.total_set = 0
     self.max_set = 0
     self.p_db = p_db
+
+  def is_goal(self, state):
+    for i in range(self.size * self.size):
+      if self.goal[i] != -1 and self.goal[i] != state[i]:
+        return False
+    return True 
 
   def get_next_states(self, current_state, size):
     def get_moves():
@@ -49,12 +69,7 @@ class IDA_star:
     states = get_states(moves)
     return prioritize_states(states)
 
-  def is_goal(self, state):
-    for i in range(self.size * self.size):
-      if self.goal[i] != -1:
-        if self.goal[i] != state[i]:
-          return False
-    return True 
+class IDA_star(search_algorithm):
 
   def search(self, state, g, threshold):
     self.max_set += 1
@@ -88,4 +103,43 @@ class IDA_star:
         break
       else:
         threshold = res
+    return self
+
+class A_star(search_algorithm):
+
+  def solve(self):
+      frontier = PriorityQueue()
+      frontier.put(self.initial, 0)
+      came_from = {}
+      cost_so_far = {}
+      came_from[str(self.initial)] = None
+      cost_so_far[str(self.initial)] = 0
+
+      while not frontier.empty():
+          current = self.current = frontier.get()
+          self.previous = came_from[str(current)]
+          
+          if self.is_goal(current):
+            break 
+          
+          for next in self.get_next_states(current, self.size):
+              new_cost = cost_so_far[str(current)] + 1
+              if str(next) not in cost_so_far or new_cost < cost_so_far[str(next)]:
+                  cost_so_far[str(next)] = new_cost
+                  priority = new_cost + self.h(next, self.goal, self)
+                  frontier.put(next, priority)
+                  self.total_set += 1
+                  if self.max_set < len(frontier.elements):
+                    self.max_set = len(frontier.elements)
+                  came_from[str(next)] = current
+      
+      return self.reconstruct_path(came_from, self.initial, self.goal)
+
+  def reconstruct_path(self, came_from, start, goal):
+    current = self.current
+    self.solution = [current]
+    while current != start:
+        current = came_from[str(current)]
+        self.solution.append(current)
+    self.solution = self.solution[::-1]
     return self
