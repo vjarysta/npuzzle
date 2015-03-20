@@ -1,19 +1,6 @@
 import heuristic_functions
 import heapq
 
-class PriorityQueue:
-    def __init__(self):
-        self.elements = []
-    
-    def empty(self):
-        return len(self.elements) == 0
-    
-    def put(self, item, priority):
-        heapq.heappush(self.elements, (priority, item))
-
-    def get(self):
-        return heapq.heappop(self.elements)[1]
-
 class search_algorithm:
 
   def __init__(self, initial, goal, size, heuristic, p_db):
@@ -43,7 +30,7 @@ class search_algorithm:
         moves.append((x + 1) + ((y) * size))
       if (y + 1 < size):
         moves.append((x) + ((y + 1) * size))
-      if (x > (0 + self.p_db)):
+      if (x > 0):
         moves.append((x - 1) + ((y) * size))
       if (y > (0 + self.p_db)):
         moves.append((x) + ((y - 1) * size))
@@ -105,18 +92,31 @@ class IDA_star(search_algorithm):
         threshold = res
     return self
 
-class A_star(search_algorithm):
+class PriorityQueue:
 
+  def __init__(self):
+    self.elements = []
+  
+  def empty(self):
+      return len(self.elements) == 0
+  
+  def put(self, item, priority):
+      heapq.heappush(self.elements, (priority, item))
+
+  def get(self):
+      return heapq.heappop(self.elements)[1]
+
+class A_star(search_algorithm):
   def solve(self):
-      frontier = PriorityQueue()
-      frontier.put(self.initial, 0)
+      opened = PriorityQueue()
+      opened.put(self.initial, 0)
       came_from = {}
       cost_so_far = {}
       came_from[str(self.initial)] = None
       cost_so_far[str(self.initial)] = 0
 
-      while not frontier.empty():
-          current = self.current = frontier.get()
+      while not opened.empty():
+          current = self.current = opened.get()
           self.previous = came_from[str(current)]
           
           if self.is_goal(current):
@@ -127,15 +127,15 @@ class A_star(search_algorithm):
               if str(next) not in cost_so_far or new_cost < cost_so_far[str(next)]:
                   cost_so_far[str(next)] = new_cost
                   priority = new_cost + self.h(next, self.goal, self)
-                  frontier.put(next, priority)
+                  opened.put(next, priority)
                   self.total_set += 1
-                  if self.max_set < len(frontier.elements):
-                    self.max_set = len(frontier.elements)
+                  if self.max_set < len(opened.elements):
+                    self.max_set = len(opened.elements)
                   came_from[str(next)] = current
       
-      return self.reconstruct_path(came_from, self.initial, self.goal)
+      return self.get_solution(came_from, self.initial, self.goal)
 
-  def reconstruct_path(self, came_from, start, goal):
+  def get_solution(self, came_from, start, goal):
     current = self.current
     self.solution = [current]
     while current != start:
@@ -143,3 +143,11 @@ class A_star(search_algorithm):
         self.solution.append(current)
     self.solution = self.solution[::-1]
     return self
+
+algorithms = {
+  "a_star": A_star,
+  "ida_star": IDA_star
+}
+
+def get_algorithm(algorithm):
+  return algorithms[algorithm]

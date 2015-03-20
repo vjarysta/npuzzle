@@ -5,8 +5,15 @@ def patterns(goal, size):
   i = 0
   patterns = []
   while i < size:
-    patterns.append(goal[i * size : size + size * i])
+    pattern = []
+    for x in range(i):
+      pattern += [-1 for empty in range(size)]
+    pattern += (goal[i * size : size + size * i])
+    for x in range(size - i - 1):
+      pattern += [-1 for empty in range(size)]
+    patterns.append(pattern)
     i += 1
+  print patterns
   return patterns
 
 def goal(size):
@@ -37,7 +44,7 @@ def goal(size):
 def from_generator(size):
   puzzle = goal(size)
 
-  for i in range(100):
+  for i in range(10000):
     i = puzzle.index(0)
     x = i % size
     y = i / size
