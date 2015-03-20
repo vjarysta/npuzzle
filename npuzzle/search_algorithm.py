@@ -88,6 +88,9 @@ class IDA_star(search_algorithm):
       if res == 0:
         self.solution.append(self.current)
         break
+      elif res == -1:
+        print "ERROR DURING IDA_STAR"
+        break
       else:
         threshold = res
     return self
@@ -133,6 +136,9 @@ class A_star(search_algorithm):
                     self.max_set = len(opened.elements)
                   came_from[str(next)] = current
       
+      if not self.is_goal(self.current):
+        print "ERROR DURING A_STAR"
+
       return self.get_solution(came_from, self.initial, self.goal)
 
   def get_solution(self, came_from, start, goal):

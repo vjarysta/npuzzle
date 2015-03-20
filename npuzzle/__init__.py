@@ -24,22 +24,22 @@ def solvable(puzzle, size):
 def display_results(results):
   print "Complexity in time :", sum([res.total_set for res in results])
   print "Complexity in size :", sum([res.max_set for res in results])
-  print "Number of moves :", sum([len(res.solution) for res in results]) - len(results) + 1
+  print "Number of moves :", sum([len(res.solution) for res in results]) - len(results)
   print "Solution :"
+  prev = []
   for res in results:
-    prev = []
     for solution in res.solution:
       if solution != prev:
         print solution
       prev = solution
 
-def main():
+def main():        
   args = get_args.get_args()
 
   if args.file:
     initial_state = get_puzzle.from_file(args)
   else:
-    initial_state = get_puzzle.from_generator(args.size)
+    initial_state = get_puzzle.from_generator(args.size, args.shuffle)
 
   if not solvable(initial_state, args.size):
     print "Puzzle not solvable."
