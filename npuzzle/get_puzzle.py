@@ -1,26 +1,24 @@
 import re
 import random
 
-# def patterns(goal, size):
-#   i = 0
-#   patterns = []
-#   while i < size:
-#     pattern = []
-#     for x in range(i):
-#       pattern += [-1 for empty in range(size)]
-#     pattern += (goal[i * size : size + size * i])
-#     for x in range(size - i - 1):
-#       pattern += [-1 for empty in range(size)]
-#     patterns.append(pattern)
-#     i += 1
-#   return patterns
-
 def patterns(goal, size):
   patterns = []
-  j = 1
-  for i in range(size - j):
-    print i
-  pattern = []
+  tmp = [-1 for n in goal]
+  for i in range(size - 3):
+    pattern = [-1 for n in goal]
+    for n in range(size * size):
+      x = n % size
+      y = n / size
+      if (x >= i and y == i) or (x == i and y > i):
+        pattern[n] = goal[n]
+        tmp[n] = goal[n]
+    patterns.append(pattern)
+  for n in range(size * size):
+    if tmp[n] == -1:
+      tmp[n] = goal[n]
+    else:
+      tmp[n] = -1
+  patterns.append(tmp)
   return patterns
 
 def goal(size):

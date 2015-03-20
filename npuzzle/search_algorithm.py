@@ -30,7 +30,7 @@ class search_algorithm:
         moves.append((x + 1) + ((y) * size))
       if (y + 1 < size):
         moves.append((x) + ((y + 1) * size))
-      if (x > 0):
+      if (x > (0 + self.p_db)):
         moves.append((x - 1) + ((y) * size))
       if (y > (0 + self.p_db)):
         moves.append((x) + ((y - 1) * size))
@@ -89,8 +89,8 @@ class IDA_star(search_algorithm):
         self.solution.append(self.current)
         break
       elif res == -1:
-        print "ERROR DURING IDA_STAR"
-        break
+        print "Unsolvable puzzle"
+        return -1
       else:
         threshold = res
     return self
@@ -137,7 +137,8 @@ class A_star(search_algorithm):
                   came_from[str(next)] = current
       
       if not self.is_goal(self.current):
-        print "ERROR DURING A_STAR"
+        print "Unsolvable puzzle"
+        return -1
 
       return self.get_solution(came_from, self.initial, self.goal)
 
