@@ -48,8 +48,10 @@ def goal(size):
 
 def from_generator(size, shuffle):
   puzzle = goal(size)
+  prev_swap = -1
 
-  for i in range(shuffle):
+  it = 0
+  while it < shuffle:
     i = puzzle.index(0)
     x = i % size
     y = i / size
@@ -63,7 +65,10 @@ def from_generator(size, shuffle):
     if (y > 0):
       moves.append((x) + ((y - 1) * size))
     to_swap = random.choice(moves)
-    puzzle[to_swap], puzzle[i] = puzzle[i], puzzle[to_swap]
+    if prev_swap != to_swap:
+      puzzle[to_swap], puzzle[i] = puzzle[i], puzzle[to_swap]
+      prev_swap = i
+      it += 1
 
   return puzzle
 
